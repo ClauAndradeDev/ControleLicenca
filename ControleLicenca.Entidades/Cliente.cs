@@ -8,6 +8,8 @@ namespace ControleLicenca.Entidades
         public string? Telefone { get; set; }
         public string? Email { get; set; }
 
+        public string? CNPJ { get; set; }
+
         public virtual ICollection<Licenca>? Licencas { get; set; }
     }
 }

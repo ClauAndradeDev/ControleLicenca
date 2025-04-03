@@ -38,7 +38,33 @@ namespace ControleLicenca.Api.Services.Cadastro
 
             if (usuarioDto != null)
             {
-                await Repositorio.Replace(usuarioModel.Id, usuarioModel);
+                //await Repositorio.Replace(usuarioModel.Id, usuarioModel);
+                usuarioDto.Situacao = (SituacaoEnum)usuario.Situacao;
+                usuarioDto.Acesso = usuario.Acesso;
+                usuarioDto.Nome = usuario.Nome;
+                await base.Update(usuarioDto.Codigo, usuarioDto);
+            }
+
+            var result = await base.FindByCodigo(codUsuario);
+
+            return result;
+        }
+
+        public async Task<UsuarioDto>AlterarSenha(int codUsuario, UsuarioDto usuario)
+        {
+            var usuarioDto = await base.FindByCodigo(codUsuario);
+            var usuarioModel = Mapper.Map<Usuario>(usuario);
+            
+            if (usuario.Acesso == usuarioDto.Acesso)
+            {
+                var senhaRecebida = HashMD5.RetornarMD5(usuario.Senha);
+                usuarioModel = await Repositorio.FindById(codUsuario);
+                usuarioModel.Senha = senhaRecebida;
+                if (usuarioModel.Senha != usuarioDto.Senha)
+                {
+                    usuarioModel.Senha = senhaRecebida;
+                    await Repositorio.Replace(usuarioModel.Id, usuarioModel);
+                }
             }
 
             var result = Mapper.Map<UsuarioDto>(usuarioModel);

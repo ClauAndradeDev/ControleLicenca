@@ -42,6 +42,9 @@ namespace ControleLicenca.Context
                 .Property(c => c.Email);
 
             modelBuilder.Entity<Cliente>()
+                .Property(c => c.CNPJ);
+
+            modelBuilder.Entity<Cliente>()
                 .Property(c => c.Situacao);
 
             modelBuilder.Entity<Cliente>()
@@ -124,6 +127,9 @@ namespace ControleLicenca.Context
             modelBuilder.Entity<Licenca>()
                 .Property(l=>l.Situacao);
 
+            modelBuilder.Entity<Licenca>()
+                .Property(l=>l.CodigoHash);
+
                       
             #endregion
 
@@ -162,7 +168,7 @@ namespace ControleLicenca.Context
 
         public string ObterStringConexao()
         {
-            return "Data Source=CLAUANDRADE\\SQLEXPRESS;Initial Catalog=LicencaDB;User Id=sa;Password=@Itapoa2023;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            return "Data Source=CLAUANDRADE\\SQLEXPRESS;Initial Catalog=LicencaDB;User Id=sa;Password=@Itapoa2023;Integrated Security=True;";
 
         }
 

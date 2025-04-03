@@ -14,7 +14,7 @@ namespace ControleLicenca.Api.App.Context
                 .Build();
 
             var builder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(config.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Solucoes.Api.App"));
+                .UseSqlServer(config.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("ControleLicenca.Api.App"));
 
             return new AppDbContext(builder.Options);
 

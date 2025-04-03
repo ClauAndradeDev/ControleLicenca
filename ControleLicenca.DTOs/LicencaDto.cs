@@ -10,7 +10,7 @@ namespace ControleLicenca.DTOs
 {
     public class LicencaDto: ModelMovimentacaoDto
     {
-        public HashCode CodigoHash { get; set; }
+        public string? CodigoHash { get; set; }
         //public int IdCliente { get; set; }
         //public int IdContrato { get; set; }
         public DateTime DataAtivacao { get; set; }

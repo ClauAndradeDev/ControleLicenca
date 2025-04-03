@@ -5,7 +5,7 @@ namespace ControleLicenca.Entidades
 {
     public class Licenca : ModelMovimentacao
     {
-        public HashCode CodigoHash { get; set; }
+        public string? CodigoHash { get; set; }
 
         public DateTime DataAtivacao { get; set; }
         public DateTime DataUltimaAtivacao { get; set; }
