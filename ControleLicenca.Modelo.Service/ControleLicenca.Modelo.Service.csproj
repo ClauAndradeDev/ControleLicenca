@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ControleLicena.Repositorio\ControleLicenca.Modelo.Repositorio.csproj" />
+    <ProjectReference Include="..\ControleLicenca.DTOs\ControleLicenca.Modelo.DTOs.csproj" />
+    <ProjectReference Include="..\ControleLicenca.Entidades\ControleLicenca.Modelo.Entidades.csproj" />
+    <ProjectReference Include="..\ControleLicenca.Modelo\ControleLicenca.Modelo.csproj" />
+  </ItemGroup>
+
+</Project>

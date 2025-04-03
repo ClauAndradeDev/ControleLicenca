@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ControleLicenca.Api.Mapper\ControleLicenca.Api.Mapper.csproj" />
+    <ProjectReference Include="..\ControleLicenca.Api.Repositorios\ControleLicenca.Api.Repositorios.csproj" />
+    <ProjectReference Include="..\ControleLicenca.Api.Services\ControleLicenca.Api.Services.csproj" />
+    <ProjectReference Include="..\ControleLicenca.Modelo.Enum\ControleLicenca.Modelo.Enum.csproj" />
+  </ItemGroup>
+
+</Project>
