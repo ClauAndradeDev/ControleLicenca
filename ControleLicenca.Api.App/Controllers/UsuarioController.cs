@@ -1,6 +1,5 @@
 ﻿using ControleLicenca.Api.Services.Cadastro;
 using ControleLicenca.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControleLicenca.Api.App.Controllers
@@ -31,7 +30,7 @@ namespace ControleLicenca.Api.App.Controllers
         }
 
         [HttpPut("usuario/{codUsuario}")]
-        public async Task<IActionResult>AlterarUsuario(int codUsuario, UsuarioDto usuario)
+        public async Task<IActionResult> AlterarUsuario(int codUsuario, UsuarioDto usuario)
         {
             var result = await UsuarioService.Alterar(codUsuario, usuario); ;
             if (result.Codigo != 0)
@@ -49,7 +48,7 @@ namespace ControleLicenca.Api.App.Controllers
         {
             var result = await UsuarioService.AlterarSenha(codUsuario, usuario);
             if (result.Codigo != 0)
-            { 
+            {
                 return Ok("Senha alterada!");
             }
             else
@@ -63,6 +62,34 @@ namespace ControleLicenca.Api.App.Controllers
         {
             await UsuarioService.Excluir(codUsuario);
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ListarUsuarios()
+        {
+            try
+            {
+                var usuarios = await UsuarioService.All();
+                return Ok(usuarios);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocorreu um erro ao buscar Usuarops, excessão: " + ex.Message);
+            }
+        }
+
+        [HttpGet("usuario/{codigo}")]
+        public async Task<IActionResult> ListarUsuarioPorCodigo(int codigo)
+        {
+            try
+            {
+                var usuario = await UsuarioService.FindByCodigo(codigo);
+                return Ok(usuario);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Ocorreu um erro ao buscar Usuário, excessão: " + ex.Message);
+            }
         }
     }
 }

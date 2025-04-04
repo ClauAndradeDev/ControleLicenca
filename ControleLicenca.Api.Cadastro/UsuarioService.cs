@@ -25,7 +25,7 @@ namespace ControleLicenca.Api.Services.Cadastro
             usuario.Situacao = SituacaoEnum.Ativo;
 
             var usuarioDto = await base.Insert(usuario);
-            //var usuarioModel = await base.ReturnModel(usuarioDto.Codigo);
+
             var result = await base.FindByCodigo(usuarioDto.Codigo);
 
             return result;
@@ -34,14 +34,12 @@ namespace ControleLicenca.Api.Services.Cadastro
         public async Task<UsuarioDto> Alterar(int codUsuario, UsuarioDto usuario)
         {
             var usuarioDto = await base.FindByCodigo(codUsuario);
-            var usuarioModel = Mapper.Map<Usuario>(usuario);
 
             if (usuarioDto != null)
             {
-                //await Repositorio.Replace(usuarioModel.Id, usuarioModel);
-                usuarioDto.Situacao = (SituacaoEnum)usuario.Situacao;
-                usuarioDto.Acesso = usuario.Acesso;
-                usuarioDto.Nome = usuario.Nome;
+                if(usuario.Situacao != usuarioDto.Situacao) usuarioDto.Situacao = (SituacaoEnum)usuario.Situacao;
+                if (usuario.Acesso != null) usuarioDto.Acesso = usuario.Acesso;
+                if (usuario.Nome != null) usuarioDto.Nome = usuario.Nome;
                 await base.Update(usuarioDto.Codigo, usuarioDto);
             }
 

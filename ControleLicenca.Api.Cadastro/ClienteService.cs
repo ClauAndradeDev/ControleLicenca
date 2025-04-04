@@ -15,35 +15,43 @@ namespace ControleLicenca.Api.Services.Cadastro
 
         public async Task<ClienteDto> Adicionar(ClienteDto cliente)
         {
+            var clienteModel = Mapper.Map<Cliente>(cliente);
             var result = new ClienteDto();
-            cliente.DataCadastro = DateTime.Now;
-            if ((cliente.Nome != null) && (cliente.Telefone != null) && (cliente.Email != null))
-            {
-                cliente.Situacao = SituacaoEnum.Ativo;
 
-                result = await base.Insert(cliente);
+            clienteModel.DataCadastro = DateTime.Now;
+            clienteModel.Situacao = SituacaoEnum.Ativo;
+            clienteModel = await Repositorio.Add(clienteModel);
 
-            }
+            result = await base.FindByCodigo(clienteModel.Id);
 
             return result;
         }
+
         public async Task<ClienteDto> Alterar(int codCliente, ClienteDto cliente)
         {
             var clienteDto = await base.FindByCodigo(codCliente);
-            var clienteModel = Mapper.Map<Cliente>(cliente);
-
-            if (clienteDto != null)
+            
+            if(clienteDto != null)
             {
-                await Repositorio.Replace(clienteModel.Id, clienteModel);
+                if (cliente.Nome != null) clienteDto.Nome = cliente.Nome;
+                if (cliente.Telefone != null) clienteDto.Telefone = cliente.Telefone;
+                if (cliente.Email != null) clienteDto.Email = cliente.Email;
+                if (cliente.CNPJ != null) clienteDto.CNPJ = cliente.CNPJ;
+                if (cliente.Situacao != clienteDto.Situacao) clienteDto.Situacao = (SituacaoEnum)cliente.Situacao;
+                await base.Update(clienteDto.Codigo, clienteDto);
             }
-
-            var result = Mapper.Map<ClienteDto>(clienteModel);
+            
+            var result = await base.FindByCodigo(codCliente);
 
             return result;
         }
 
         public async Task Excluir(int codCliente)
         {
+            /*
+             * TODO
+             * FAZER VERIFICAÇÃO SE CLIENTE ESTÁ VINCULADO A UMA LICENCA/CONTRATO ANTES DA EXCLUSÃO
+             */
             var clienteModel = await Repositorio.FindById(codCliente);
             if (clienteModel != null)
             {
