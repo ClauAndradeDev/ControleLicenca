@@ -37,7 +37,9 @@ namespace ControleLicenca.Api.Services.Cadastro
         {
             var contratoDto = await base.FindByCodigo(codContrato);
             var contratoModel = Mapper.Map<Contrato>(contrato);
-
+            contratoModel.Id = codContrato;
+            if (contrato.DataInicio > DateTime.Now) contratoModel.DataInicio = contratoDto.DataInicio;
+            if (contrato.DataInicio != contratoDto.DataInicio) contratoModel.DataInicio = contrato.DataInicio;
             if (contratoDto != null) 
             {
                 await Repositorio.Replace(contratoModel.Id, contratoModel);

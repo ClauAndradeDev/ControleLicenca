@@ -111,7 +111,8 @@ namespace ControleLicenca.Api.Mapper
                 .ForMember(model => model.DataFinal, opt => opt.MapFrom(dto => dto.DataFinal))
                 .ForMember(model => model.IgnoraDataFinal, opt => opt.MapFrom(dto => dto.IgnoraDataFinal))
                 .ForMember(model => model.ValorMensal, opt => opt.MapFrom(dto => dto.ValorMensal))
-                .ForMember(model => model.IdCliente, opt => opt.MapFrom(dto => dto.Clientes))
+                .ForMember(model => model.IdCliente, opt => opt.MapFrom(dto => dto.IdCliente))
+                .ForMember(model => model.Licencas, opt => opt.MapFrom(dto => dto.Licencas))
                 .ForMember(model => model.Situacao, opt => opt.MapFrom(dto => dto.Situacao))
                 .IgnoreAllUnmapped();
             #endregion
