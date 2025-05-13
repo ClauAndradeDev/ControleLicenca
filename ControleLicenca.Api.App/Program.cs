@@ -52,12 +52,14 @@ builder.Services.AddTransient(opt => opt.GetService<AppDbContextFactory>().Creat
 builder.Services.AddTransient<ClienteRepositorio>();
 builder.Services.AddTransient<ContratoRepositorio>();
 builder.Services.AddTransient<LicencaRepositorio>();
+builder.Services.AddTransient<ProdutoRepositorio>();
 builder.Services.AddTransient<UsuarioRepositorio>();
 
 /*SERVIÇOS*/
 builder.Services.AddTransient<ClienteService>();
 builder.Services.AddTransient<ContratoService>();
 builder.Services.AddTransient<LicencaService>();
+builder.Services.AddTransient<ProdutoService>();
 builder.Services.AddTransient<UsuarioService>();
 
 builder.Services.AddTransient<Mapper>();

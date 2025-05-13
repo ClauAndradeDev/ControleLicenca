@@ -1,6 +1,6 @@
 ﻿namespace ControleLicenca.Modelo
 {
-    public class ModelBaseDto
+    public class ModelBaseCadastroDto
     {
         public int Codigo { get; set; }
     }

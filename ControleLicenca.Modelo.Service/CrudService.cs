@@ -5,7 +5,7 @@ namespace ControleLicenca.Modelo.Service
 {
     public abstract class CrudService<TModel, TDto>
            where TModel : ModelBase
-           where TDto : ModelBaseDto
+           where TDto : ModelBaseCadastroDto
     {
 
         protected BaseRepositorio<TModel> Repositorio { get; private set; }

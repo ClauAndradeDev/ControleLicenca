@@ -1,4 +1,5 @@
 ﻿using ControleLicenca.Entidades;
+using ControleLicenca.Modelo.Entidades;
 using Microsoft.EntityFrameworkCore;
 
 namespace ControleLicenca.Context
@@ -9,6 +10,7 @@ namespace ControleLicenca.Context
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Contrato> Contratos { get; set; }
         public DbSet<Licenca> Licencas { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -48,9 +50,9 @@ namespace ControleLicenca.Context
                 .Property(c => c.Situacao);
 
             modelBuilder.Entity<Cliente>()
-                .HasMany(c => c.Licencas)
-                .WithOne(l => l.Clientes)
-                .HasForeignKey(l => l.IdCliente)
+                .HasMany(c => c.Contratos)
+                .WithOne(cont => cont.Clientes)
+                .HasForeignKey(cont => cont.IdCliente)
                 .OnDelete(DeleteBehavior.Restrict);
 
             #endregion
@@ -79,22 +81,7 @@ namespace ControleLicenca.Context
                 .Property(cont => cont.DataFinal);
 
             modelBuilder.Entity<Contrato>()
-                .Property(cont => cont.DataValidade);
-
-            modelBuilder.Entity<Contrato>()
                 .Property(cont => cont.ValorMensal);
-
-            modelBuilder.Entity<Contrato>()
-                .Property(cont=>cont.ValorAnual);
-
-            modelBuilder.Entity<Contrato>()
-                .Property(cont => cont.ValorContratoTotal);
-
-            modelBuilder.Entity<Contrato>()
-                .Property(cont => cont.PeriodoMeses);
-
-            modelBuilder.Entity<Contrato>()
-                .Property(cont => cont.PeriodoAnos);
 
             modelBuilder.Entity<Contrato>()
                 .HasMany(c => c.Licencas)
@@ -119,18 +106,33 @@ namespace ControleLicenca.Context
                 .Property(l => l.DataMovimentacao);
 
             modelBuilder.Entity<Licenca>()
-                .Property(l => l.DataAtivacao);
-
-            modelBuilder.Entity<Licenca>()
-                .Property(l => l.DataUltimaAtivacao);
-
-            modelBuilder.Entity<Licenca>()
                 .Property(l=>l.Situacao);
 
             modelBuilder.Entity<Licenca>()
                 .Property(l=>l.CodigoHash);
 
-                      
+            #endregion
+
+            #region Produto
+            modelBuilder.Entity<Produto>()
+                .ToTable("Produto");
+
+            modelBuilder.Entity<Produto>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<Produto>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Produto>()
+                .Property(p=>p.DescricaoSistema);
+
+            modelBuilder.Entity<Produto>()
+                .HasMany(p => p.Licencas)
+                .WithOne(l => l.Produtos)
+                .HasForeignKey(l => l.IdProduto)
+                .OnDelete(DeleteBehavior.Restrict);
+
             #endregion
 
             #region Usuario

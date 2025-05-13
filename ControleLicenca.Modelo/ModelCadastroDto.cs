@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ControleLicenca.Modelo
 {
-    public class ModelCadastroDto: ModelBaseDto
+    public class ModelCadastroDto: ModelBaseCadastroDto
     {
         public DateTime DataCadastro { get; set; }
         public SituacaoEnum Situacao { get; set; }

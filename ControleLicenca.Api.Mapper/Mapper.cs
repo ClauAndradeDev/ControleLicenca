@@ -2,6 +2,8 @@
 using ControleLicenca.DTOs;
 using ControleLicenca.Entidades;
 using ControleLicenca.Extensoes;
+using ControleLicenca.Modelo.DTOs;
+using ControleLicenca.Modelo.Entidades;
 using ControleLicenca.Modelo.Extensoes;
 
 namespace ControleLicenca.Api.Mapper
@@ -34,6 +36,7 @@ namespace ControleLicenca.Api.Mapper
                 .ForMember(dto => dto.Telefone, opt => opt.MapFrom(model => model.Telefone))
                 .ForMember(dto => dto.Email, opt => opt.MapFrom(model => model.Email))
                 .ForMember(dto => dto.CNPJ, opt => opt.MapFrom(model => model.CNPJ))
+                .ForMember(dto => dto.Contratos, opt => opt.MapFrom(model => model.Contratos))
                 .ForMember(dto => dto.Situacao, opt => opt.MapFrom(model => model.Situacao))
                 .IgnoreAllUnmapped();
             #endregion
@@ -45,12 +48,10 @@ namespace ControleLicenca.Api.Mapper
                 .ForMember(dto => dto.Descricao, opt => opt.MapFrom(model => model.Descricao))
                 .ForMember(dto => dto.DataInicio, opt => opt.MapFrom(model => model.DataInicio))
                 .ForMember(dto => dto.DataFinal, opt => opt.MapFrom(model => model.DataFinal))
-                .ForMember(dto => dto.DataValidade, opt => opt.MapFrom(model => model.DataValidade))
+                .ForMember(dto => dto.IgnoraDataFinal, opt => opt.MapFrom(model => model.IgnoraDataFinal))
                 .ForMember(dto => dto.ValorMensal, opt => opt.MapFrom(model => model.ValorMensal))
-                .ForMember(dto => dto.ValorAnual, opt => opt.MapFrom(model => model.ValorAnual))
-                .ForMember(dto => dto.ValorContratoTotal, opt => opt.MapFrom(model => model.ValorContratoTotal))
-                .ForMember(dto => dto.PeriodoMeses, opt => opt.MapFrom(model => model.PeriodoMeses))
-                .ForMember(dto => dto.PeriodoAnos, opt => opt.MapFrom(model => model.PeriodoAnos))
+                .ForMember(dto => dto.IdCliente, opt => opt.MapFrom(model => model.IdCliente))
+                .ForMember(dto => dto.Licencas, opt => opt.MapFrom(model => model.Licencas))
                 .ForMember(dto => dto.Situacao, opt => opt.MapFrom(model => model.Situacao))
                 .IgnoreAllUnmapped();
             #endregion
@@ -60,11 +61,18 @@ namespace ControleLicenca.Api.Mapper
                 .ForMember(dto => dto.Codigo, opt => opt.MapFrom(model => model.Id))
                 .ForMember(dto => dto.CodigoHash, opt => opt.MapFrom(model => model.CodigoHash))
                 .ForMember(dto => dto.DataMovimentacao, opt => opt.MapFrom(model => model.DataMovimentacao))
-                .ForMember(dto => dto.DataAtivacao, opt => opt.MapFrom(model => model.DataAtivacao))
-                .ForMember(dto => dto.DataUltimaAtivacao, opt => opt.MapFrom(model => model.DataUltimaAtivacao))
                 .ForMember(dto => dto.Situacao, opt => opt.MapFrom(model => model.Situacao))
-                .ForMember(dto => dto.Clientes, opt => opt.MapFrom(model => model.IdCliente))
                 .ForMember(dto => dto.Contratos, opt => opt.MapFrom(model => model.IdContrato))
+                .ForMember(dto => dto.Produtos, opt => opt.MapFrom(model => model.IdProduto))
+                .IgnoreAllUnmapped();
+            #endregion
+
+            #region Produto
+            cfg.CreateMap<Produto, ProdutoDto>()
+                .ForMember(dto => dto.Codigo, opt => opt.MapFrom(model => model.Id))
+                .ForMember(dto => dto.DescricaoSistema, opt => opt.MapFrom(model => model.DescricaoSistema))
+                .ForMember(dto => dto.DataCadastro, opt => opt.MapFrom(model => model.DataCadastro))
+                .ForMember(dto => dto.Situacao, opt => opt.MapFrom(model => model.Situacao))
                 .IgnoreAllUnmapped();
             #endregion
 
@@ -89,6 +97,7 @@ namespace ControleLicenca.Api.Mapper
                .ForMember(model => model.Telefone, opt => opt.MapFrom(dto => dto.Telefone))
                .ForMember(model => model.Email, opt => opt.MapFrom(dto => dto.Email))
                .ForMember(model => model.CNPJ, opt => opt.MapFrom(dto => dto.CNPJ))
+               //.ForMember(model => model.Contratos, opt=>opt.MapFrom(dto=>dto.Contratos))
                .ForMember(model => model.Situacao, opt => opt.MapFrom(dto => dto.Situacao))
                .IgnoreAllUnmapped();
             #endregion
@@ -100,12 +109,18 @@ namespace ControleLicenca.Api.Mapper
                 .ForMember(model => model.Descricao, opt => opt.MapFrom(dto => dto.Descricao))
                 .ForMember(model => model.DataInicio, opt => opt.MapFrom(dto => dto.DataInicio))
                 .ForMember(model => model.DataFinal, opt => opt.MapFrom(dto => dto.DataFinal))
-                .ForMember(model => model.DataValidade, opt => opt.MapFrom(dto => dto.DataValidade))
+                .ForMember(model => model.IgnoraDataFinal, opt => opt.MapFrom(dto => dto.IgnoraDataFinal))
                 .ForMember(model => model.ValorMensal, opt => opt.MapFrom(dto => dto.ValorMensal))
-                .ForMember(model => model.ValorAnual, opt => opt.MapFrom(dto => dto.ValorAnual))
-                .ForMember(model => model.ValorContratoTotal, opt => opt.MapFrom(dto => dto.ValorContratoTotal))
-                .ForMember(model => model.PeriodoMeses, opt => opt.MapFrom(dto => dto.PeriodoMeses))
-                .ForMember(model => model.PeriodoAnos, opt => opt.MapFrom(dto => dto.PeriodoAnos))
+                .ForMember(model => model.IdCliente, opt => opt.MapFrom(dto => dto.Clientes))
+                .ForMember(model => model.Situacao, opt => opt.MapFrom(dto => dto.Situacao))
+                .IgnoreAllUnmapped();
+            #endregion
+
+            #region ProdutoDto
+            cfg.CreateMap<ProdutoDto, Produto>()
+                .ForMember(model => model.Id, opt => opt.MapFrom(dto => dto.Codigo))
+                .ForMember(model => model.DescricaoSistema, opt => opt.MapFrom(dto => dto.DescricaoSistema))
+                .ForMember(model => model.DataCadastro, opt => opt.MapFrom(dto => dto.DataCadastro))
                 .ForMember(model => model.Situacao, opt => opt.MapFrom(dto => dto.Situacao))
                 .IgnoreAllUnmapped();
             #endregion
@@ -115,11 +130,9 @@ namespace ControleLicenca.Api.Mapper
                 .ForMember(model => model.Id, opt => opt.MapFrom(dto => dto.Codigo))
                 .ForMember(model => model.CodigoHash, opt => opt.MapFrom(dto => dto.CodigoHash))
                 .ForMember(model => model.DataMovimentacao, opt => opt.MapFrom(dto => dto.DataMovimentacao))
-                .ForMember(model => model.DataAtivacao, opt => opt.MapFrom(dto => dto.DataAtivacao))
-                .ForMember(model => model.DataUltimaAtivacao, opt => opt.MapFrom(dto => dto.DataUltimaAtivacao))
                 .ForMember(model => model.Situacao, opt => opt.MapFrom(dto => dto.Situacao))
-                .ForMember(model => model.IdCliente, opt => opt.MapFrom(dto => dto.Clientes))
                 .ForMember(model => model.IdContrato, opt => opt.MapFrom(dto => dto.Contratos))
+                .ForMember(model => model.IdProduto, opt => opt.MapFrom(dto => dto.Produtos))
                 .IgnoreAllUnmapped();
             #endregion
 

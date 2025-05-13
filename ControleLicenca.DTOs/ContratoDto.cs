@@ -12,12 +12,13 @@ namespace ControleLicenca.DTOs
         public string? Descricao { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFinal { get; set; }
-        public DateTime DataValidade { get; set; }
+        public Boolean IgnoraDataFinal { get; set; }
         public decimal ValorMensal { get; set; }
-        public int PeriodoMeses { get; set; }
-        public int PeriodoAnos { get; set; }
-        public decimal ValorAnual { get; set; }
-        public decimal ValorContratoTotal { get; set; }
+
+        public int IdCliente { get; set; }
+        public virtual ClienteDto? Clientes { get; set; }
+
+        public virtual LicencaDto[]? Licencas { get; set; }
 
     }
 }

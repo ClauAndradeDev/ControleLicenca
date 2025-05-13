@@ -7,7 +7,7 @@ namespace ControleLicenca.Api.Services
 {
     public abstract class CrudServices<TModel, TDto> : CrudService<TModel, TDto>
             where TModel : ModelBase
-            where TDto : ModelBaseDto
+            where TDto : ModelBaseCadastroDto
     {
         public Mapper.Mapper Mapper { get; set; }
         public CrudServices(BaseRepositorio<TModel> repository, Mapper.Mapper mapper) : base(repository)

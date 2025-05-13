@@ -3,6 +3,7 @@ using ControleLicenca.Api.Repositorios;
 using ControleLicenca.DTOs;
 using ControleLicenca.Entidades;
 using ControleLicenca.Modelo.Enum;
+using Microsoft.VisualBasic;
 
 
 namespace ControleLicenca.Api.Services.Movimentacao
@@ -11,84 +12,120 @@ namespace ControleLicenca.Api.Services.Movimentacao
     {
         public ClienteRepositorio ClienteRepositorio { get; set; }
         public ContratoRepositorio ContratoRepositorio { get; set; }
+        public ProdutoRepositorio ProdutoRepositorio { get; set; }
 
 
         public LicencaService(LicencaRepositorio licencaRepositorio, 
-            ClienteRepositorio clienteRepositorio,
+           ProdutoRepositorio produtoRepositorio,
             ContratoRepositorio contratoRepositorio,
             Mapper.Mapper mapper): 
                 base (licencaRepositorio, mapper)
         {
-            ClienteRepositorio = clienteRepositorio;
+            ProdutoRepositorio = produtoRepositorio;
             ContratoRepositorio = contratoRepositorio;
         }
 
-        public async Task<LicencaDto> Adicionar(LicencaDto licenca, int codCliente, int codContrato)
+        public async Task<string> Adicionar(LicencaDto licenca, int codProduto, int codContrato)
         {
-           
-            var clienteModel = await ClienteRepositorio.FindById(codCliente);
+            var produtoModel = await ProdutoRepositorio.FindById(codProduto);
             var contratoModel = await ContratoRepositorio.FindById(codContrato);
+            var clienteModel = await ClienteRepositorio.FindById(contratoModel.IdCliente);
 
             var licencaModel = Mapper.Map<Licenca>(licenca);
             licencaModel.DataMovimentacao = DateTime.Now;
-            licencaModel.IdCliente = clienteModel.Id;
-            licencaModel.IdContrato = contratoModel.Id;
-            licencaModel.Situacao = SituacaoEnum.Ativo;
 
-            licencaModel = await Repositorio.Add(licencaModel);
+            if ((produtoModel != null) || (contratoModel != null))
+            {
+                licencaModel.DataMovimentacao = DateTime.Now;
+                licencaModel.IdContrato = contratoModel.Id;
+                licencaModel.IdProduto = produtoModel.Id;
+                licencaModel.CodigoHash = produtoModel.DescricaoSistema + ";" + clienteModel.Nome + ";" + DateTime.Now;
 
+                if (contratoModel.Situacao == SituacaoEnum.Ativo) 
+                {
+                    licencaModel.Situacao = SituacaoEnum.ConfirmadoPagamento;
+                    licencaModel = await Repositorio.Add(licencaModel);
+                }
+                else
+                {
+                    await InativarLicenca(licencaModel.Id);
+                }
+            }
 
             var result = await base.FindByCodigo(licencaModel.Id);
 
-            return result;
+            if (result.Situacao == SituacaoEnum.Ativo)
+            {
+                return result.CodigoHash;
+            }
+            else
+            {
+                return "";
+            }
+
+            
         }
 
-        public async Task<LicencaDto> Alterar (int codLicenca, int codCliente, int codContrato, LicencaDto licenca)
+        public async Task InativarLicenca (int codLicenca)
         {
             var licencaModel = await Repositorio.FindById(codLicenca);
-            var clienteModel = await ClienteRepositorio.FindById(codCliente);
-            var contratoModel = await ContratoRepositorio.FindById(codContrato);
 
-            if (licencaModel != null)
-            {
-                if (clienteModel != null)
-                {
-                    var clienteJaExiste = licenca.Clientes.Where(l => l.Codigo == clienteModel.Id).Any();
-                    if (!clienteJaExiste)
-                    {
-                        licencaModel.IdCliente = clienteModel.Id;
-                    }
-                }
-                if (contratoModel != null)
-                {
-                    var contratoJaExiste = licenca.Contratos.Where(c=>c.Codigo == contratoModel.Id).Any();
-                    if (!contratoJaExiste)
-                    {
-                        licencaModel.IdContrato = contratoModel.Id;
-                    }
-                }
+            licencaModel.DataMovimentacao = DateAndTime.Now;
+            licencaModel.Situacao = SituacaoEnum.AusenciaPagamento;
 
-                licencaModel.Situacao = (SituacaoEnum)licenca.Situacao;
-                licencaModel = await Repositorio.Replace(licencaModel.Id, licencaModel);
-            }
+            licencaModel = await Repositorio.Add(licencaModel);
 
-            var result = Mapper.Map<LicencaDto>(licencaModel);
-
-            return result;
+            await Repositorio.Replace(licencaModel.Id, licencaModel);
         }
 
-        public async Task<Boolean> Excluir (int codLicenca)
-        {
-            var licencaModel = await base.FindByCodigo(codLicenca);
-            if (licencaModel != null)
-            {
-                await base.Delete(codLicenca);
-            }
-            
-            return true;
-        }
+        //public async Task<LicencaDto> Alterar (int codLicenca, int codProduto, int codContrato, LicencaDto licenca)
+        //{
+        //    var licencaModel = await Repositorio.FindById(codLicenca);
+        //    var contratoModel = await ContratoRepositorio.FindById(codContrato);
+        //    var produtoModel = await ProdutoRepositorio.FindById(codProduto);
+        //    var clienteModel = await ClienteRepositorio.FindById(contratoModel.IdCliente);
 
-        public async Task<LicencaDto> AjustaSituacao (int codLicenca)
+        //    if (licencaModel != null)
+        //    {
+        //        if ((produtoModel != null) || (contratoModel != null) || (clienteModel != null))
+        //        {
+        //            if(produtoModel.DescricaoSistema != licenca.Produtos.DescricaoSistema)
+        //            {
+
+        //            }
+        //        }
+
+
+        //        //{
+        //        //    var produtoJaExiste = licenca.Produtos.Where
+        //        //}
+        //        //if (clienteModel != null)
+        //        //{
+        //        //    var clienteJaExiste = licenca.Clientes.Where(l => l.Codigo == clienteModel.Id).Any();
+        //        //    if (!clienteJaExiste)
+        //        //    {
+        //        //        licencaModel.IdCliente = clienteModel.Id;
+        //        //    }
+        //        //}
+        //        //if (contratoModel != null)
+        //        //{
+        //        //    var contratoJaExiste = licenca.Contratos.Where(c => c.Codigo == contratoModel.Id).Any();
+        //        //    if (!contratoJaExiste)
+        //        //    {
+        //        //        licencaModel.IdContrato = contratoModel.Id;
+        //        //    }
+        //        //}
+
+        //        licencaModel.Situacao = (SituacaoEnum)licenca.Situacao;
+        //        licencaModel = await Repositorio.Replace(licencaModel.Id, licencaModel);
+        //    }
+
+        //    var result = Mapper.Map<LicencaDto>(licencaModel);
+
+        //    return result;
+        //}
+
+        public async Task<LicencaDto> AjustarSituacao (int codLicenca)
         {
             var licencaModel = await Repositorio.FindById(codLicenca);
 

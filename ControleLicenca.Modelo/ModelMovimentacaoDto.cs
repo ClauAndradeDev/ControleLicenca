@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ControleLicenca.Modelo
 {
-    public class ModelMovimentacaoDto: ModelBaseDto
+    public class ModelMovimentacaoDto: ModelBaseCadastroDto
     {
         public DateTime DataMovimentacao { get; set; }
     }
